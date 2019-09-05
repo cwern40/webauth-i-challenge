@@ -13,3 +13,7 @@ function find() {
 function login(filter) {
     return db('users').where(filter)
 }
+
+function register(user) {
+    return db('users').insert(user)
+}
