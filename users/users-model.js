@@ -9,3 +9,7 @@ module.exports ={
 function find() {
     return db('users')
 }
+
+function login(filter) {
+    return db('users').where(filter)
+}
