@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const Users = require('./users-model')
 const restricted = require('./restricted')
 
+// endpoint to register a new user. /api/register
 router.post('/register', (req, res) => {
     let user = req.body;
 
@@ -20,6 +21,7 @@ router.post('/register', (req, res) => {
         })
 })
 
+// endpoint to login. /api/login
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
@@ -44,6 +46,7 @@ router.post('/login', (req, res) => {
         })
 })
 
+// endpoint to get a list of users. Requires a user to be logged in. /api/users
 router.get('/users', restricted, (req, res) => {
     Users.find()
         .then(users => {
