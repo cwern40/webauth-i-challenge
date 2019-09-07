@@ -3,13 +3,14 @@ const bcrypt = require('bcryptjs');
 const Users = require('./users-model')
 const restricted = require('./restricted')
 
-router.post('/api/register', (req, res) => {
+router.post('/register', (req, res) => {
     let user = req.body;
 
     user.password = bcrypt.hashSync(user.password, 10);
 
     Users.register(user)
         .then(user => {
+            req.session.user = user
             res.status(201).json(user)
         })
         .catch(err => {
@@ -19,14 +20,22 @@ router.post('/api/register', (req, res) => {
         })
 })
 
-router.post('/api/login', restricted, (req, res) => {
-    const { username } = req.headers;
+router.post('/login', restricted, (req, res) => {
+    const { username, password } = req.body;
 
     Users.login({ username })
+        .first()
         .then(user => {
-            res.status(200).json({
-                message: "Logged in"
-            })
+            if (user && bcrypt.compareSync(password, user.password)) {
+                req.session.user = user;
+                res.status(200).json({
+                    message: "Logged in"
+                })
+            } else {
+                res.status(401).json({
+                    message: "You shall not pass!"
+                })
+            }
         })
         .catch(err => {
             res.status(500).json({
@@ -35,7 +44,7 @@ router.post('/api/login', restricted, (req, res) => {
         })
 })
 
-router.get('/api/users', restricted, (req, res) => {
+router.get('/users', restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
