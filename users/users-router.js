@@ -20,10 +20,10 @@ router.post('/register', (req, res) => {
         })
 })
 
-router.post('/login', restricted, (req, res) => {
+router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    Users.login({ username })
+    Users.findBy({ username })
         .first()
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {

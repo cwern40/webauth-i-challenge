@@ -2,7 +2,7 @@ const db = require('../data/db-config')
 
 module.exports ={
     find,
-    login,
+    findBy,
     register
 }
 
@@ -10,7 +10,7 @@ function find() {
     return db('users')
 }
 
-function login(filter) {
+function findBy(filter) {
     return db('users').where(filter)
 }
 
